@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anime App - Home</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div><strong>Lucky Wheel 🎡</strong></div>
+    <div class="currency">
+      <div id="diamond-count">💎 0</div>
+      <div id="coin-count">💰 0</div>
+    </div>
+  </header>
+<div id="reward-popup" class="reward-popup hidden">+💎1 +🪙100</div>
+  <div class="extras">
+    <div>🎁 Daily Reward</div>
+    <div>⚙️ Settings</div>
+  </div>
+
+  <div class="main-buttons">
+    <a href="anime_persona.html">
+      <div>Anime Persona<br><small>(Find my anime type)</small></div>
+    </a>
+    <a href="phrases_quotes.html">
+      <div>Phrases & Quotes<br><small>(Motivational & Emotional)</small></div>
+    </a>
+    <a href="cards_collections.html">
+      <div>Cards Collection<br><small>(Bought cards stored here)</small></div>
+    </a>
+     <a href="level.html">
+      <div>Cards battle<br><small>(Let the war begin)</small></div>
+    </a>
+  </div>
+
+  
+  <!-- Bottom Navigation -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-item" data-key="home" tabindex="0" aria-current="false">
+  <img src="icons/home.jpg" data-inactive="icons/home.jpg" data-active="icons/home-active.jpg" width="28" height="28" alt="Home" />
+  <div class="nav-label">Home</div>
+  </a>
+  
+  <a href="games.html" class="nav-item" data-key="games" tabindex="0" aria-current="false">
+  <img src="icons/games.png" data-inactive="icons/games.png" data-active="icons/games-active.png" width="28" height="28" alt="Games" />
+  <div class="nav-label">Games</div>
+  </a>
+  
+  <a href="cardshop.html" class="nav-item" data-key="store" tabindex="0" aria-current="false">
+  <img src="icons/shop.png" data-inactive="icons/shop.png" data-active="icons/shop-active.png" width="28" height="28" alt="Store" />
+  <div class="nav-label">Store</div>
+  </a>
+  
+  <a href="stats.html" class="nav-item" data-key="stats" tabindex="0" aria-current="false">
+  <img src="icons/stats.png" data-inactive="icons/stats.png" data-active="icons/stats-active.png" width="28" height="28" alt="Stats" />
+  <div class="nav-label">Stats</div>
+  </a>
+  </nav>
+
+  <script>
+    const coins = localStorage.getItem("coins");
+    const diamonds = localStorage.getItem("diamonds");
+
+    document.getElementById("coin-count").textContent = "🪙 " + (coins !== null ? coins : 0);
+    document.getElementById("diamond-count").textContent = "💎 " + (diamonds !== null ? diamonds : 0);
+   
+    (function(){
+    const navItems = document.querySelectorAll('.nav-item');
+    if(!navItems.length) return;
+    
+    function setActiveByKey(key){
+    navItems.forEach(a=>{
+    const img = a.querySelector('img');
+    if(!img) return;
+    const inactive = img.getAttribute('data-inactive');
+    const active = img.getAttribute('data-active');
+    
+    if(a.dataset.key === key){
+    a.classList.add('active');
+    a.setAttribute('aria-current','page');
+    if(active && img.src.indexOf(active) === -1){
+    img.style.opacity = 0; // smooth fade
+    setTimeout(()=>{
+    img.src = active;
+    img.style.opacity = 1;
+    }, 120);
+    }
+    } else {
+    a.classList.remove('active');
+    a.setAttribute('aria-current','false');
+    if(inactive && img.src.indexOf(inactive) === -1){
+    img.src = inactive;
+    img.style.opacity = 0.88;
+    }
+    }
+    });
+    }
+    
+    // 🔹 detect current file name
+    const path = window.location.pathname.split('/').pop().replace(/\?.*$/,'');
+    let activeKey = null;
+    navItems.forEach(a=>{
+    const href = (a.getAttribute('href') || '').split('/').pop();
+    if(href && path === href){
+    activeKey = a.dataset.key;
+    }
+    });
+    
+    // fallback: home
+    setActiveByKey(activeKey || "home");
+    
+    // update on click
+    navItems.forEach(a=>{
+    a.addEventListener('click', ()=>{
+    setActiveByKey(a.dataset.key);
+    });
+    });
+    })();
+    
+    // Call this whenever user earns coins/diamonds
+    function showRewardPopup(text) {
+    const popup = document.getElementById("reward-popup");
+    popup.textContent = text;
+    popup.classList.remove("hidden");
+    setTimeout(() => {
+    popup.classList.add("hidden");
+    }, 2000);
+    }
+  </script>
+</body>
+</html>
